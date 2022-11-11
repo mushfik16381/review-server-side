@@ -68,6 +68,55 @@ async function run(){
             console.log(query);
             res.send(result);
           });
+
+          // delete
+    app.delete("/reviews/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const result = await reviewCollection.deleteOne(query);
+        console.log(query);
+        res.send(result);
+      });
+  
+      app.get("/myreviews/:email", async (req, res) => {
+        const email = req.params.email;
+        const query = { email: email };
+        const cursor = reviewCollection.find(query);
+        const result = await cursor.toArray();
+        console.log(query);
+        res.send(result);
+      });
+
+    // --------------------------
+ // --------------------------
+    // upgrade
+    app.get("/esreviews/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const cursor = reviewCollection.find(query);
+        const result = await cursor.toArray();
+        console.log(query);
+        res.send(result);
+      });
+  
+      // ----------------
+      app.patch("/review/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: ObjectId(id) };
+        const updatedReview = req.body;
+        const options = { upsert: true };
+        const updateDoc = {
+          $set: {
+            message: updatedReview.message,
+          },
+        };
+        const result = await reviewCollection.updateOne(
+          query,
+          updateDoc,
+          options
+        );
+        res.send(result);
+      });
     }
     finally{
     }
